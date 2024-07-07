@@ -1,4 +1,5 @@
 int TEST_PIN = 13;
+int PIN13_STATUS = HIGH; 
 
 void setup()
 {
@@ -11,7 +12,13 @@ void setup()
 void loop()
 {
   // put your main code here, to run repeatedly:
-  digitalWrite(TEST_PIN, HIGH);
-  delay(5000);
+  if(PIN13_STATUS == HIGH) {
+    delay(3000);
+    PIN13_STATUS = LOW;
+  } else {
+    PIN13_STATUS = HIGH;
+    delay(2000);
+  }
+  digitalWrite(TEST_PIN, PIN13_STATUS);
   Serial.println("Running in loop!!!");
 }
