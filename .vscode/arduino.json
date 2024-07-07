@@ -1,0 +1,6 @@
+{
+    "board": "atmel-avr-xminis:avr:atmega328p_xplained_mini",
+    "port": "/dev/ttyS0",
+    "programmer": "medbg",
+    "sketch": "ardurinoLearning/ardurinoLearning.ino"
+}
