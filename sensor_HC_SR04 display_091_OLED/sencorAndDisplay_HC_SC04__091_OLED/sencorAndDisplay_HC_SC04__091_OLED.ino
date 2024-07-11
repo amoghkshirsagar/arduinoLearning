@@ -12,6 +12,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 int TEST_PIN = 13;
 int TEST_PIN2 = 7;
 
+int UNIT_PIN4 = 4;
+int UNIT_STATUS = LOW;
+
 int PING_12 = 12;
 int ECHO_2 = 2;
 int USPING_12status = LOW;
@@ -47,6 +50,7 @@ void setup()
   startUpOled();
   delay(2000);
   Serial.begin(9600);
+  pinMode(UNIT_PIN4, INPUT);
   pinMode(PING_12, OUTPUT);
   pinMode(ECHO_2, INPUT);
   pinMode(TEST_PIN, OUTPUT);
@@ -54,8 +58,9 @@ void setup()
   Serial.println("in setup");
 }
 
-void loop() 
+void loop()
 {
+  UNIT_STATUS = digitalRead(UNIT_PIN4);
   Serial.println("in loop");
   // send :
   digitalWrite(PING_12, LOW);
@@ -68,7 +73,10 @@ void loop()
   digitalRead(ECHO_2);
 
   duration = pulseIn(ECHO_2, HIGH);
-  distance = duration * 0.034 / (2*2.54);
+  distance = duration * 0.034 / 2;
+  if(UNIT_STATUS == HIGH) {
+    distance = distance/2.54;
+  }
   Serial.print("Distance: ");
   Serial.println(distance);
   if(distance<20) {
@@ -108,8 +116,11 @@ void printOled(float distance)
   //(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
   display.setTextSize(2);             // Draw 2X-scale text
   display.print(distance, 2); //6-digit after decimal point
-  display.print(F(" CM"));
-
+  if(UNIT_STATUS == HIGH) {
+    display.print(F(" IN"));
+  } else {
+    display.print(F(" CM"));
+  }
   display.display();
   // delay(2000);
 }
