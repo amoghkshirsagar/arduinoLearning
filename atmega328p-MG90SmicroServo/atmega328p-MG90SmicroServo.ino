@@ -31,6 +31,14 @@ int trackingAngle = 0;
 void loop()
 {
   oscillate(360, 100);
+  // servo.write(90);
+  // pause(500);
+  // servo.write(0);
+  // pause(5000);
+  // servo.write(180);
+  // pause(5000);
+  // servo.write(90);
+  // pause(500);
   // rotateClockwise(360);
   // pause(100);
 }
@@ -42,9 +50,9 @@ void oscillate(int angle, int pauseDur) {
   pause(pauseDur);
 }
 
-int ACLOCK_RUN_MS = 90;
+int ACLOCK_RUN_MS = 85;
 int ACLOCK_PULSE = 1550;
-int CLOCK_RUN_MS = 98;
+int CLOCK_RUN_MS = 90;
 int CLOCK_PULSE = 1450;
 int STOP_PULSE = 1500;
 int STOP_RUN_MS = 60;

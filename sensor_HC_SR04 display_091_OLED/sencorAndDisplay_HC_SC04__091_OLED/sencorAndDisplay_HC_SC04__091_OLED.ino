@@ -114,11 +114,13 @@ void printOled(float distance)
   display.setTextSize(2);             // Draw 2X-scale text
   display.print(distance, 2); //6-digit after decimal point
   display.print(F(" CM"));
+  Serial.println(distance);
 
   display.println(F(""));
   display.println(F(""));
   display.print(distance/2.54, 2); //6-digit after decimal point
   display.print(F(" IN"));
+  Serial.println(distance/2.54);
   display.display();
   // delay(2000);
 }
