@@ -11,3 +11,9 @@ sudo chown root:admn /dev/ttyUSB0
 ```
 git config --global credential.helper store
 ```
+
+### Servo
+
+- Move `AntiClock` pulse for `95` milliseconds write`writeMicroseconds(1540)`
+- Move `AntiClock` pulse for `85` milliseconds write`writeMicroseconds(1460)`
+- Making 60 Pulses will complete 360 degree

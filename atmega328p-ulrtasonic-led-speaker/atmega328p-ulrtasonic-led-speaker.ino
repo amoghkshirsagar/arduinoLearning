@@ -1,15 +1,17 @@
+#include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "pitches.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 32 // OLED display height, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-int TEST_PIN = 13;
+int TEST_PIN = 5;
 int TEST_PIN2 = 7;
 
 int UNIT_PIN4 = 4;
@@ -22,6 +24,13 @@ int TST_STATUS = HIGH;
 int TST_STATUS2 = HIGH;
 int duration = 0;
 float distance = 0;
+// notes in the melody:
+int melody[] = {
+  NOTE_C4, NOTE_G3,NOTE_G3, NOTE_A3, NOTE_G3,0, NOTE_B3, NOTE_C4};
+
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {
+  4, 8, 8, 4,4,4,4,4 };
 
 void setup()
 {
@@ -56,6 +65,22 @@ void setup()
   pinMode(TEST_PIN, OUTPUT);
   pinMode(TEST_PIN2, OUTPUT);
   Serial.println("in setup");
+
+  for (int thisNote = 0; thisNote < 8; thisNote++) {
+
+    // to calculate the note duration, take one second 
+    // divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int noteDuration = 1000/noteDurations[thisNote];
+    tone(8, melody[thisNote],noteDuration);
+
+    // to distinguish the notes, set a minimum time between them.
+    // the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = noteDuration * 1.30;
+    delay(pauseBetweenNotes);
+    // stop the tone playing:
+    noTone(8);
+  }
 }
 
 void loop()
@@ -74,9 +99,6 @@ void loop()
 
   duration = pulseIn(ECHO_2, HIGH);
   distance = duration * 0.034 / 2;
-  if(UNIT_STATUS == HIGH) {
-    distance = distance/2.54;
-  }
   Serial.print("Distance: ");
   Serial.println(distance);
   if(distance<20) {
@@ -105,7 +127,6 @@ void startUpOled()
 }
 void printOled(float distance) 
 {
-  distance = distance;
   display.clearDisplay();
   display.setTextColor(SSD1306_WHITE);
   display.setTextSize(1);             // Normal 1:1 pixel scale
@@ -116,11 +137,12 @@ void printOled(float distance)
   //(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
   display.setTextSize(2);             // Draw 2X-scale text
   display.print(distance, 2); //6-digit after decimal point
-  if(UNIT_STATUS == HIGH) {
-    display.print(F(" IN"));
-  } else {
-    display.print(F(" CM"));
-  }
+  display.print(F(" CM"));
+
+  display.println(F(""));
+  display.println(F(""));
+  display.print(distance/2.54, 2); //6-digit after decimal point
+  display.print(F(" IN"));
   display.display();
   // delay(2000);
 }
