@@ -30,7 +30,7 @@ void setup()
 int trackingAngle = 0;
 void loop()
 {
-  oscillate(360, 100);
+  oscillate(90, 100);
   // servo.write(90);
   // pause(500);
   // servo.write(0);
